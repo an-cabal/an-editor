@@ -2,59 +2,51 @@ use an_rope::Rope;
 
 use std::convert;
 use std::default::Default;
-use std::fs::{File, OpenOptions};
-use std::path::Path;
+use std::fs::File;
+use std::path::{Path, PathBuf};
 use std::io;
-use std::io::{Read, Write, BufReader, BufWriter};
+use std::io::{Read, BufReader};
 
 
 #[derive(Debug)]
-pub struct Buffer<W: Write> {
+pub struct Buffer {
     /// The full text of the buffer
     pub text: Rope
   , /// Path to write the text to on saves, if this buffer is into an open file
-    pub file: Option<W> // TODO: should this be the writer, rather than the path?
+    pub file: Option<PathBuf> // TODO: support having a session file?
     // TODO: do we want to store a cursor position on the buffer?
-    // TODO: put edit history here unless using persistent ropes?
+    // TODO: put edit history here
 }
 
-impl<W: Write> Buffer<W> {
+impl Buffer {
 
     pub fn new() -> Self {
         Buffer { text: Rope::new()
                , file: None }
     }
 
-    pub fn from_file<P>(path: P) -> io::Result<Buffer<BufWriter<File>>>
+    pub fn from_file<P>(path: P) -> io::Result<Buffer>
     where P: AsRef<Path> {
-        let file = OpenOptions::new()
-                    .read(true)
-                    .open(path.as_ref())?;
+        let file = File::open(path.as_ref())?;
         let mut text = String::new();
 
         BufReader::new(file).read_to_string(&mut text)?;
 
-        let file = OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .open(path.as_ref())?;
-
         Ok(Buffer { text: Rope::from(text)
-                  , file: Some(BufWriter::new(file)) })
+                  , file: Some(path.as_ref().to_owned()) })
 
     }
 
 }
 
 
-impl<W: Write> Default for Buffer<W> {
+impl Default for Buffer {
     #[inline]
     fn default() -> Self { Self::new() }
 }
 
-impl<T, W> convert::From<T> for Buffer<W>
-where Rope: convert::From<T>
-    , W: Write {
+impl<T> convert::From<T> for Buffer
+where Rope: convert::From<T> {
 
     fn from(text: T) -> Self {
         Buffer { text: Rope::from(text)
@@ -64,10 +56,10 @@ where Rope: convert::From<T>
 }
 
 #[cfg(feature = "unstable")]
-impl<P> convert::TryFrom<P> for Buffer<BufWriter<File>>
+impl<P> convert::TryFrom<P> for Buffer
 where P: AsRef<Path> {
     type Err = io::Error;
 
     #[inline]
-    fn try_from(path: P) -> Result<Self, Self::Err> { Self::from_file(path) }
+    fn try_from(path: P) -> io::Result<Self> { Self::from_file(path) }
 }
