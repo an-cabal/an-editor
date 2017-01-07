@@ -1,0 +1,21 @@
+[package]
+name = "an-editor"
+description = "an text editor."
+version = "0.0.1"
+authors = [ "Eliza Weisman <hi@hawkweisman.me>"
+          , "Chris McDonald <mail.chris.mcdonald@gmail.com>"
+          , "Rachel McLaughlin <rleighmac@gmail.com>"]
+repository = "https://github.com/an-cabal/an-editor"
+homepage = "https://github.com/an-cabal/an-editor"
+readme = "README.md"
+license = "MIT"
+
+
+[features]
+# no features by default
+default = []
+# if building against unstable Rust
+unstable = ["an-rope/unstable"]
+
+[dependencies.an-rope]
+version = "0.0.3"
