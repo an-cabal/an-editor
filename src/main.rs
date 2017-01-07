@@ -5,6 +5,7 @@
 extern crate an_rope;
 
 pub mod buffer;
+pub mod history;
 
 fn main() {
 

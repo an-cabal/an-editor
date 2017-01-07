@@ -1,5 +1,7 @@
 use an_rope::Rope;
 
+use history;
+
 use std::convert;
 use std::default::Default;
 use std::fs::File;
@@ -15,14 +17,16 @@ pub struct Buffer {
   , /// Path to write the text to on saves, if this buffer is into an open file
     pub file: Option<PathBuf> // TODO: support having a session file?
     // TODO: do we want to store a cursor position on the buffer?
-    // TODO: put edit history here
+  , /// The buffer's edit history
+    pub history: history::Stack
 }
 
 impl Buffer {
 
     pub fn new() -> Self {
         Buffer { text: Rope::new()
-               , file: None }
+               , file: None
+               , history: history::Stack::new() }
     }
 
     pub fn from_file<P>(path: P) -> io::Result<Buffer>
@@ -33,7 +37,8 @@ impl Buffer {
         BufReader::new(file).read_to_string(&mut text)?;
 
         Ok(Buffer { text: Rope::from(text)
-                  , file: Some(path.as_ref().to_owned()) })
+                  , file: Some(path.as_ref().to_owned())
+                  , history: history::Stack::new() })
 
     }
 
@@ -50,7 +55,8 @@ where Rope: convert::From<T> {
 
     fn from(text: T) -> Self {
         Buffer { text: Rope::from(text)
-               , file: None }
+               , file: None
+               , history: history::Stack::new() }
     }
 
 }
