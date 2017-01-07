@@ -10,6 +10,8 @@ homepage = "https://github.com/an-cabal/an-editor"
 readme = "README.md"
 license = "MIT"
 
+[[bin]]
+name = "an"
 
 [features]
 # no features by default
