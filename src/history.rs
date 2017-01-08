@@ -1,13 +1,6 @@
 //! Edit history
 
-#[derive(Debug)]
-pub struct Stack {
-    // TODO: stub
-}
+use an_zipper::ZipList;
+use an_rope::Rope;
 
-impl Stack {
-
-    pub fn new() -> Self {
-        Stack { }
-    }
-}
+pub type Stack = ZipList<Rope>;

@@ -25,3 +25,6 @@ version = "0.0.3"
 [dependencies.clippy]
 version = "*"
 optional = true
+
+[dependencies.an-zipper]
+git = "https://github.com/an-cabal/an-zipper.git"
