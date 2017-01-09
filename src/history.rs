@@ -14,14 +14,18 @@ impl Stack {
         Stack(ZipList::new())
     }
 
-    pub fn undo(&mut self) {
+    /// Undo the most recent action in the history stack
+    #[inline] pub fn undo(&mut self) {
         self.0.move_left();
     }
 
-    pub fn redo(&mut self) {
+    /// Redo the most recently undone action in the history stack
+    #[inline] pub fn redo(&mut self) {
+        // TODO: check if the right side is non-empty?
         self.0.move_right();
     }
 
+    /// Apply a function to the current state of the stack, advancing it
     pub fn edit<F>(&mut self, f: F)
     where F: Fn(&Rope) -> Rope {
         let state = {
@@ -29,6 +33,11 @@ impl Stack {
             f(curr.unwrap_or( &Rope::new() ))
         };
         self.0.push_left(state);
+    }
+
+    /// Return the current state of the history stack
+    #[inline] pub fn state(&self) -> Option<&Rope> {
+        self.0.peek_left()
     }
 }
 
