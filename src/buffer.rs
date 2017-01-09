@@ -8,6 +8,7 @@ use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::io;
 use std::io::{Read, BufReader};
+use std::ops;
 
 
 #[derive(Debug)]
@@ -64,4 +65,9 @@ where P: AsRef<Path> {
 
     #[inline]
     fn try_from(path: P) -> io::Result<Self> { Self::from_file(path) }
+}
+
+impl ops::Deref for Buffer {
+    type Target = history::Stack;
+    #[inline] fn deref(&self) -> &history::Stack { &self.text }
 }

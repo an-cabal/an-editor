@@ -4,6 +4,7 @@ use an_zipper::ZipList;
 use an_rope::Rope;
 
 use std::convert;
+use std::ops;
 
 #[derive(Debug)]
 pub struct Stack(ZipList<Rope>);
