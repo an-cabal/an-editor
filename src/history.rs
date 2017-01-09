@@ -3,6 +3,8 @@
 use an_zipper::ZipList;
 use an_rope::Rope;
 
+use std::convert;
+
 #[derive(Debug)]
 pub struct Stack(ZipList<Rope>);
 
@@ -27,5 +29,13 @@ impl Stack {
             f(curr.unwrap_or( &Rope::new() ))
         };
         self.0.push_left(state);
+    }
+}
+
+impl convert::From<Rope> for Stack {
+    fn from(r: Rope) -> Self {
+        let mut list = ZipList::new();
+        list.push_left(r);
+        Stack(list)
     }
 }

@@ -13,20 +13,17 @@ use std::io::{Read, BufReader};
 #[derive(Debug)]
 pub struct Buffer {
     /// The full text of the buffer
-    pub text: Rope
+    pub text: history::Stack
   , /// Path to write the text to on saves, if this buffer is into an open file
     pub file: Option<PathBuf> // TODO: support having a session file?
     // TODO: do we want to store a cursor position on the buffer?
-  , /// The buffer's edit history
-    pub history: history::Stack
 }
 
 impl Buffer {
 
     pub fn new() -> Self {
-        Buffer { text: Rope::new()
-               , file: None
-               , history: history::Stack::new() }
+        Buffer { text: history::Stack::new()
+               , file: None }
     }
 
     pub fn from_file<P>(path: P) -> io::Result<Buffer>
@@ -36,9 +33,8 @@ impl Buffer {
 
         BufReader::new(file).read_to_string(&mut text)?;
 
-        Ok(Buffer { text: Rope::from(text)
-                  , file: Some(path.as_ref().to_owned())
-                  , history: history::Stack::new() })
+        Ok(Buffer { text: history::Stack::from(Rope::from(text))
+                  , file: Some(path.as_ref().to_owned()) })
 
     }
 
@@ -54,9 +50,8 @@ impl<T> convert::From<T> for Buffer
 where Rope: convert::From<T> {
 
     fn from(text: T) -> Self {
-        Buffer { text: Rope::from(text)
-               , file: None
-               , history: history::Stack::new() }
+        Buffer { text: history::Stack::from(Rope::from(text))
+               , file: None }
     }
 
 }
