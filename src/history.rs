@@ -41,6 +41,10 @@ impl Stack {
     }
 }
 
+impl Default for Stack {
+    #[inline] fn default() -> Self { Self::new() }
+}
+
 impl convert::From<Rope> for Stack {
     fn from(r: Rope) -> Self {
         let mut list = ZipList::new();

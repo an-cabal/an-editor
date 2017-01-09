@@ -38,12 +38,13 @@ impl Buffer {
 
     }
 
+
+
 }
 
 
 impl Default for Buffer {
-    #[inline]
-    fn default() -> Self { Self::new() }
+    #[inline] fn default() -> Self { Self::new() }
 }
 
 impl<T> convert::From<T> for Buffer
