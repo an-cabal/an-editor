@@ -16,12 +16,12 @@ impl Stack {
     }
 
     /// Undo the most recent action in the history stack
-    #[inline] pub fn undo(&mut self) {
+     pub fn undo(&mut self) {
         self.0.move_left();
     }
 
     /// Redo the most recently undone action in the history stack
-    #[inline] pub fn redo(&mut self) {
+     pub fn redo(&mut self) {
         // TODO: check if the right side is non-empty?
         self.0.move_right();
     }
@@ -37,13 +37,13 @@ impl Stack {
     }
 
     /// Return the current state of the history stack
-    #[inline] pub fn state(&self) -> Option<&Rope> {
+     pub fn state(&self) -> Option<&Rope> {
         self.0.peek_left()
     }
 }
 
 impl Default for Stack {
-    #[inline] fn default() -> Self { Self::new() }
+     fn default() -> Self { Self::new() }
 }
 
 impl convert::From<Rope> for Stack {
