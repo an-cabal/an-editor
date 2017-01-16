@@ -43,7 +43,7 @@ impl Buffer {
 
 
 impl Default for Buffer {
-    #[inline] fn default() -> Self { Self::new() }
+     fn default() -> Self { Self::new() }
 }
 
 impl<T> convert::From<T> for Buffer
@@ -61,11 +61,15 @@ impl<P> convert::TryFrom<P> for Buffer
 where P: AsRef<Path> {
     type Err = io::Error;
 
-    #[inline]
+
     fn try_from(path: P) -> io::Result<Self> { Self::from_file(path) }
 }
 
 impl ops::Deref for Buffer {
     type Target = history::Stack;
-    #[inline] fn deref(&self) -> &history::Stack { &self.text }
+     fn deref(&self) -> &history::Stack { &self.text }
+}
+
+impl ops::DerefMut for Buffer {
+     fn deref_mut(&mut self) -> &mut history::Stack { &mut self.text }
 }
