@@ -32,7 +32,7 @@ fn main() {
             //        permissions?)
             (@arg INPUT: "Sets the input file to open.")
             (@arg debug: -d ... "Sets the level of debugging information")
-            (@arg config: -c --config <conf> #{1, 2} {file_exists}
+            (@arg config: -c --config <conf> {file_exists}
                 "Sets a custom config file")
     ).get_matches();
 
