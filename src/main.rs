@@ -12,6 +12,7 @@ extern crate termion;
 
 pub mod buffer;
 pub mod history;
+pub mod cursor;
 
 /// Tests whether or not a file actually exists
 fn file_exists(path: String) -> Result<(), String> {
@@ -27,6 +28,9 @@ fn main() {
     use termion::color;
     use termion::raw::IntoRawMode;
     use std::io::{Read, Write, stdout, stdin};
+    use termion::event::Key;
+    use termion::input::TermRead;
+    use cursor::Position;
 
     let args = clap_app!(an =>
         (version: crate_version!())
@@ -64,13 +68,15 @@ fn main() {
     let stdin = stdin();
     let stdin = stdin.lock();
 
+    let mut cursor = cursor::Position { line: 1, col: 1 };
+
     write!( stdout, "{}{}{}"
           , termion::clear::All
           , termion::style::Reset
           , termion::cursor::Goto(1,1)
           ).unwrap();
     stdout.flush().unwrap();
-    loop {
+
     for (n, line) in buffer.text.state().unwrap().lines().enumerate() {
         write!( stdout, "{}{}{}{:<5}{}{}{}"
               , termion::cursor::Goto(1, n as u16)
@@ -82,8 +88,22 @@ fn main() {
               , color::Bg(color::Black)
               , line ).unwrap();
     }
-
+    write!(stdout, "{}", termion::cursor::Goto(cursor.col, cursor.line)).unwrap();
     stdout.flush().unwrap();
-}
+
+    for c in stdin.keys() {
+
+        match c.unwrap() {
+            Key::Char('q') => break,
+            // FIXME: make not bad
+            Key::Left => cursor.col -= 1,
+            Key::Right => cursor.col += 1,
+            Key::Up => cursor.line -= 1,
+            Key::Down => cursor.line += 1,
+            _ => {},
+        }
+        write!(stdout, "{}", termion::cursor::Goto(cursor.col, cursor.line)).unwrap();
+        stdout.flush().unwrap();
+    }
 
 }
