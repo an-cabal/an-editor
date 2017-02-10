@@ -30,10 +30,10 @@ fn main() {
         (about: "An text editor.")
             // FIXME: validate that the path is valid (& if it exists, we have
             //        permissions?)
-            (@arg INPUT: "Sets the input file to open.")
             (@arg debug: -d ... "Sets the level of debugging information")
-            (@arg config: -c --config <conf> {file_exists}
+            (@arg config: -c --config +takes_value {file_exists}
                 "Sets a custom config file")
+            (@arg INPUT: "Sets the input file to open.")
     ).get_matches();
 
     if let Some(cfg) = args.value_of("config") {
