@@ -27,7 +27,9 @@ fn main() {
         (version: crate_version!())
         (author: crate_authors!(", "))
         (about: "An text editor.")
-            (@arg INPUT: +required "Sets the input file to open.")
+            // FIXME: validate that the path is valid (& if it exists, we have
+            //        permissions?)
+            (@arg INPUT: "Sets the input file to open.")
             (@arg debug: -d ... "Sets the level of debugging information")
             (@arg config: -c --config <conf> #{1, 2} {file_exists}
                 "Sets a custom config file")
