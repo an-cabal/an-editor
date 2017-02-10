@@ -22,6 +22,7 @@ fn file_exists(path: String) -> Result<(), String> {
 }
 
 fn main() {
+    use self::buffer::Buffer;
 
     let args = clap_app!(an =>
         (version: crate_version!())
@@ -43,4 +44,13 @@ fn main() {
         // FIXME: unimplemented
         unimplemented!();
     }
+
+    // Create a text buffer
+    let buffer = if let Some(path) = args.value_of("INPUT") {
+        // either by opening the specified input file if one was given,
+        Buffer::from_file(path).expect("Could not open file!")
+    } else {
+        // or just making an empty file
+        Buffer::new()
+    };
 }
