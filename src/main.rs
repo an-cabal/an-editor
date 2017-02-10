@@ -8,6 +8,7 @@ extern crate an_rope;
 extern crate an_zipper;
 #[macro_use]
 extern crate clap;
+extern crate termion;
 
 pub mod buffer;
 pub mod history;
@@ -23,6 +24,9 @@ fn file_exists(path: String) -> Result<(), String> {
 
 fn main() {
     use self::buffer::Buffer;
+    use termion::color;
+    use termion::raw::IntoRawMode;
+    use std::io::{Read, Write, stdout, stdin};
 
     let args = clap_app!(an =>
         (version: crate_version!())
@@ -53,4 +57,26 @@ fn main() {
         // or just making an empty file
         Buffer::new()
     };
+
+    // Initialize 'em all.
+    let stdout = stdout();
+    let mut stdout = stdout.lock().into_raw_mode().unwrap();
+    let stdin = stdin();
+    let stdin = stdin.lock();
+
+    write!( stdout, "{}{}{}"
+          , termion::clear::All
+          , termion::style::Reset
+          , termion::cursor::Goto(1,1)
+          ).unwrap();
+    stdout.flush().unwrap();
+    loop {
+    for (n, line) in buffer.text.state().unwrap().lines().enumerate() {
+        write!( stdout, "{}{:<5}{}"
+              , termion::cursor::Goto(1, n as u16), n, line ).unwrap();
+    }
+
+    stdout.flush().unwrap();
+}
+
 }

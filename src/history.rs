@@ -5,6 +5,7 @@ use an_rope::Rope;
 
 use std::convert;
 use std::ops;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct Stack(ZipList<Rope>);
@@ -51,5 +52,12 @@ impl convert::From<Rope> for Stack {
         let mut list = ZipList::new();
         list.push_left(r);
         Stack(list)
+    }
+}
+
+impl fmt::Display for Stack {
+    #[inline]
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0.peek_left().unwrap_or(&Rope::new()))
     }
 }
