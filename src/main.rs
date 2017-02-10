@@ -72,8 +72,15 @@ fn main() {
     stdout.flush().unwrap();
     loop {
     for (n, line) in buffer.text.state().unwrap().lines().enumerate() {
-        write!( stdout, "{}{:<5}{}"
-              , termion::cursor::Goto(1, n as u16), n, line ).unwrap();
+        write!( stdout, "{}{}{}{:<5}{}{}{}"
+              , termion::cursor::Goto(1, n as u16)
+              // FIXME: get colors from config file
+              , color::Fg(color::LightWhite)
+              , color::Bg(color::LightBlack)
+              , n
+              , color::Fg(color::White)
+              , color::Bg(color::Black)
+              , line ).unwrap();
     }
 
     stdout.flush().unwrap();
